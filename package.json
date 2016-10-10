@@ -1,0 +1,43 @@
+{
+  "name": "jm-ecs",
+  "version": "0.0.6",
+  "description": "Entity Component System lib",
+  "main": "./lib/index",
+  "scripts": {
+    "test": "node test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jm-root/jm-ecs.git"
+  },
+  "keywords": [
+    "javascript",
+    "jm-ecs"
+  ],
+  "author": {
+    "name": "Jeff YU"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jm-root/jm-ecs/issues"
+  },
+  "homepage": "https://github.com/jm-root/jm-ecs",
+  "dependencies": {
+    "jm-core": "*"
+  },
+  "devDependencies": {
+      "jshint": "*",
+      "gulp": ">=3.5.6",
+      "gulp-clean": ">=0.3.1",
+      "gulp-concat": ">=2.2.0",
+      "gulp-jshint": ">=1.5.1",
+      "gulp-rename": ">=1.2.0",
+      "gulp-sequence": ">=0.3.0",
+      "gulp-uglify": ">=0.3.1",
+      "gulp-util": ">=2.2.14"
+  },
+  "readme": "jm-ecs\r\n=========\r\n\r\necs lib for jm-* projects\r\n",
+  "readmeFilename": "README.md",
+  "_id": "jm-ecs@0.0.1",
+  "_from": "jm-ecs@*"
+}
