@@ -35,9 +35,5 @@
       "gulp-sequence": ">=0.3.0",
       "gulp-uglify": ">=0.3.1",
       "gulp-util": ">=2.2.14"
-  },
-  "readme": "jm-ecs\r\n=========\r\n\r\necs lib for jm-* projects\r\n",
-  "readmeFilename": "README.md",
-  "_id": "jm-ecs@0.0.1",
-  "_from": "jm-ecs@*"
+  }
 }
