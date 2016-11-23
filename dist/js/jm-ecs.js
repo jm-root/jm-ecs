@@ -4,6 +4,7 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 (function(){
+    if(jm.Component) return;
     jm.Component = jm.TagObject.extend({
         _className: 'component',
         _singleton: true,
@@ -76,6 +77,7 @@ if (typeof module !== 'undefined' && module.exports) {
     };
 
 })();
+
 var jm = jm || {};
 if (typeof module !== 'undefined' && module.exports) {
     var _ = require('lodash');
@@ -83,6 +85,7 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 (function(){
+    if(jm.Entity) return;
     var guid = 1;
 
     function isEmptyObject(e) {
@@ -300,6 +303,7 @@ if (typeof module !== 'undefined' && module.exports) {
 
     });
 })();
+
 var jm = jm || {};
 if (typeof module !== 'undefined' && module.exports) {
     var _ = require('lodash');
@@ -307,6 +311,7 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 (function(){
+    if(jm.EntityManager) return;
     var __parseConfigInfo = function(opts, key) {
         var bArray = _.isArray(opts);
         var className, name;
@@ -733,6 +738,7 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 (function(){
+    if(jm.Factory) return;
     jm.Factory = jm.EventEmitter.extend({
         _className : 'factory',
 
@@ -807,6 +813,7 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 (function(){
+    if(jm.Processor) return;
     jm.Processor = jm.EventEmitter.extend({
         _className : 'processor',
 
