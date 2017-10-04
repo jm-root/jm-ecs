@@ -1,1 +1,1 @@
-require('./entityManager.js');
+require('./ecs.js')

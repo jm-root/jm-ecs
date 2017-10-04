@@ -1,1 +1,1 @@
-require('./examples');
+require('./examples')

@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 var gulp = require('gulp'),
   gutil = require('gulp-util'),
@@ -8,32 +8,48 @@ var gulp = require('gulp'),
   concat = require('gulp-concat'),
   rename = require('gulp-rename'),
   uglify = require('gulp-uglify'),
-  version = 'v' + require('./package.json').version;
+  babel = require('gulp-babel'),
+  browserify = require('gulp-browserify'),
+  eslint = require('gulp-eslint'),
+  version = 'v' + require('./package.json').version
 
 gulp.task('clean', function () {
-  return gulp.src(['dist/*'])
-    .pipe(clean({force: true}));
-});
+  return gulp.src(['dist/*', 'lib/*'])
+    .pipe(clean({force: true}))
+})
 
 gulp.task('jshint', function () {
   return gulp.src([
-      'lib/**/*.js'
+    'lib/**/*.js'
   ])
     .pipe(jshint())
-    .pipe(jshint.reporter());
-});
+    .pipe(jshint.reporter())
+})
 
-gulp.task('js', function () {
+gulp.task('eslint', function () {
   return gulp.src([
-      'lib/**/*.js',
-      '!lib/index.js'
+    'src/**/*.js',
+    'test/**/*.js'
   ])
-      .pipe(concat('dist/js/jm-ecs.js'))
-      .pipe(gulp.dest(''))
-      .pipe(rename({suffix: '.min'}))
-      .pipe(uglify())
-      .pipe(gulp.dest(''));
-});
+    .pipe(eslint({configFle: './.eslintrc'}))
+    .pipe(eslint.format())
+})
 
-gulp.task('default', gulpSequence('clean', 'jshint', ['js']));
+gulp.task('es6to5', ['eslint'], function () {
+  return gulp.src('./src/**/*.js')
+    .pipe(babel())
+    .pipe(gulp.dest('./lib/'))
+})
 
+gulp.task('pack', ['es6to5'], function () {
+  return gulp.src('./lib/index.js')
+    .pipe(browserify())
+    .pipe(concat('dist/js/jm-ecs.js'))
+    .pipe(gulp.dest(''))
+    .pipe(rename({suffix: '.min'}))
+    .pipe(uglify())
+    .pipe(gulp.dest('')
+    )
+})
+
+gulp.task('default', gulpSequence('clean', ['pack']))
