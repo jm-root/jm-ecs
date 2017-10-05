@@ -5,10 +5,10 @@ import Obj from './obj'
  */
 class C extends Obj {
   /**
-     * create a component
-     * @param {E} e entity
-     * @param {Object} opts
-     */
+   * create a component
+   * @param {E} e entity
+   * @param {Object} opts
+   */
   constructor (e, opts) {
     super(opts)
     this._entity = e
@@ -19,12 +19,16 @@ class C extends Obj {
     return this._entity
   }
 
+  get className () {
+    return C.className || C.name
+  }
+
   get singleton () {
     return C.singleton
   }
 
   get name () {
-    return this._name || C.alias || C.class
+    return this._name || this.className
   }
 
   set name (v) {
@@ -32,28 +36,14 @@ class C extends Obj {
     this._name = v
   }
 
-  /**
-     * on added to an entity
-     * @param e
-     */
-  onUse (e) {
-  }
-
-  /**
-     * on removed from an entity
-     * @param e
-     */
-  onUnuse (e) {
-  }
-
   toJSON () {
     return {
-      class: C.alias || C.class
+      className: this.className
     }
-  };
+  }
 }
 
-C.class = 'component'
+C.className = 'component'
 C.singleton = false
 C.nameReadOnly = false
 

@@ -272,6 +272,13 @@ class EM extends Obj {
   update (opts) {
     this.emit('update', opts)
   }
+
+  toJSON () {
+    return {
+      ecs: this.ecs,
+      entities: this.entities
+    }
+  }
 }
 
 export default EM

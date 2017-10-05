@@ -9,6 +9,7 @@ var e = em.e()
 e.use('component', {value: 1})
 e.use('component', {value: 2}, 'c2')
 em.addEntity(e, 'test2')
+e.unuse('c2')
 
 // 通过entityType创建实体
 em.addEntityType('test', {

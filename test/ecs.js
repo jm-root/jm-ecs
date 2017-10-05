@@ -16,6 +16,7 @@ let e = em.e()
 e.use('component', {value: 1})
 e.use('component', {value: 2}, 'c2')
 e.use('component2', {value: 3})
+e.unuse('c2')
 em.addEntity(e, 'test2')
 
 // 通过entityType创建实体
@@ -35,6 +36,7 @@ let utils = util.utils
 logger.info('ecs: %j', ecs)
 logger.info('em: %j', em)
 logger.info('e: %j', e)
+logger.info('e2: %j', e2)
 
 describe('ecs', function () {
   it('ecs', function () {

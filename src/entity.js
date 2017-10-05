@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import tag from 'jm-tag'
 import error from 'jm-err'
 import Obj from './obj'
@@ -38,7 +39,9 @@ class E extends Obj {
       let o = em._entitiesByTag[tag]
       if (!o) return
       delete o[this.entityId]
-      if (isEmptyObject(o)) { delete em._entitiesByTag[tag] }
+      if (isEmptyObject(o)) {
+        delete em._entitiesByTag[tag]
+      }
     })
   }
 
@@ -77,8 +80,8 @@ class E extends Obj {
 
     let components = this._components
     let componentsByClass = this._componentsByClass
-    name || (name = C.alias || C.class || C.name)
-    let cClassName = C.alias || C.class
+    name || (name = c.className)
+    let cClassName = c.className
 
     let bUsedName = (name in components)
     if (bUsedName) {
@@ -95,7 +98,6 @@ class E extends Obj {
     this.addTag(cClassName)
     if (C.alias) this.addTag(C.alias)
 
-    c.onUse(this)
     c.emit('use', this)
     this.emit('use', c)
 
@@ -105,21 +107,22 @@ class E extends Obj {
   unuse (C_or_name) {
     let components = this._components
     let componentsByClass = this._componentsByClass
-    let C = C_or_name
-    if (typeof C === 'string') {
-      C = components[C]
+    let c = C_or_name
+    let name
+    if (typeof c === 'string') {
+      name = c
+      c = components[c]
     }
-    if (!C) return this
+    if (!c) return this
 
-    let name = c.name
+    name || (name = c.name)
     let cClassName = c.className
     let v = componentsByClass[cClassName]
     delete components[name]
     delete v[name]
     delete this[name]
-    this.removeTag(cClassName)
+    if(!v.length) this.removeTag(cClassName)
 
-    c.onUnuse(this)
     c.emit('unuse', this)
     this.emit('unuse', c)
     c.destroy()
@@ -196,50 +199,47 @@ class E extends Obj {
     }
   }
 
-  // toJSON() {
-  //     let em = this.em;
-  //     let type = this.type;
-  //     let et = em.entityType(type);
-  //
-  //     let opts = {
-  //         type: type,
-  //         tags: [],
-  //         components: {}
-  //     };
-  //
-  //     opts.tags = _.cloneDeep(this.tags);
-  //     opts.tags = _.without(opts.tags, type);
-  //
-  //     let cs = opts.components;
-  //     let v = this.components;
-  //     for (let i in v) {
-  //         let c = v[i];
-  //         cs[i] = c.toJSON();
-  //         opts.tags = _.without(opts.tags, i, c.className);
-  //         if (c.classAlias) opts.tags = _.without(opts.tags, c.classAlias);
-  //         if (i === cs[i].className)
-  //             delete cs[i].className;
-  //     }
-  //
-  //     for (let i in et.tags) {
-  //         opts.tags = _.without(opts.tags, et.tags[i]);
-  //     }
-  //     if (!opts.tags.length) delete opts.tags;
-  //
-  //     //去掉entityType中已经定义的相同部分
-  //     this._clip(et, opts);
-  //
-  //     v = this.children;
-  //     for (let i in v) {
-  //         let e = v[i];
-  //         if (!opts.children) opts.children = [];
-  //         opts.children.push(e.toJSON());
-  //     }
-  //
-  //     return opts;
-  // }
-}
+  toJSON () {
+    let type = this.type
 
-E._className = 'entity'
+    let opts = {
+      type: type,
+      tags: [],
+      components: {}
+    }
+
+    opts.tags = _.cloneDeep(this.tags);
+    opts.tags = _.without(opts.tags, type);
+
+    let cs = opts.components;
+    let v = this.components;
+    for (let i in v) {
+      let c = v[i];
+      cs[i] = c.toJSON();
+      opts.tags = _.without(opts.tags, i, c.className);
+      if (i === cs[i].className)
+        delete cs[i].className
+    }
+
+    let et = this.em.entityType(type)
+
+    if (et) {
+      for (let i in et.tags) {
+        opts.tags = _.without(opts.tags, et.tags[i]);
+      }
+      // 去掉entityType中已经定义的相同部分
+      this._clip(et, opts);
+    }
+    if (opts.tags && !opts.tags.length) delete opts.tags;
+    v = this.children;
+    for (let i in v) {
+      let e = v[i];
+      if (!opts.children) opts.children = [];
+      opts.children.push(e.toJSON());
+    }
+
+    return opts;
+  }
+}
 
 export default E

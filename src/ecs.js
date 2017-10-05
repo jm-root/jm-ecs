@@ -28,7 +28,7 @@ class ECS extends Obj {
    */
   use (C, name) {
     if (!C) throw error.err(error.Err.FA_PARAMS)
-    name || (name = C.class || C.name)
+    name || (name = C.className || C.name)
     if (!name) throw error.err(error.Err.FA_PARAMS)
     let components = this._components
     if (components[name]) {
@@ -80,6 +80,10 @@ class ECS extends Obj {
 
   em (opts) {
     return new EM(this, opts)
+  }
+
+  toJSON () {
+    return {components: this.components}
   }
 }
 

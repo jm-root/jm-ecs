@@ -26,10 +26,10 @@ var C = function (_Obj) {
   _inherits(C, _Obj);
 
   /**
-     * create a component
-     * @param {E} e entity
-     * @param {Object} opts
-     */
+   * create a component
+   * @param {E} e entity
+   * @param {Object} opts
+   */
   function C(e, opts) {
     _classCallCheck(this, C);
 
@@ -41,34 +41,21 @@ var C = function (_Obj) {
   }
 
   _createClass(C, [{
-    key: 'onUse',
-
-
-    /**
-       * on added to an entity
-       * @param e
-       */
-    value: function onUse(e) {}
-
-    /**
-       * on removed from an entity
-       * @param e
-       */
-
-  }, {
-    key: 'onUnuse',
-    value: function onUnuse(e) {}
-  }, {
     key: 'toJSON',
     value: function toJSON() {
       return {
-        class: C.alias || C.class
+        className: this.className
       };
     }
   }, {
     key: 'entity',
     get: function get() {
       return this._entity;
+    }
+  }, {
+    key: 'className',
+    get: function get() {
+      return C.className || C.name;
     }
   }, {
     key: 'singleton',
@@ -78,7 +65,7 @@ var C = function (_Obj) {
   }, {
     key: 'name',
     get: function get() {
-      return this._name || C.alias || C.class;
+      return this._name || this.className;
     },
     set: function set(v) {
       if (C.nameReadOnly) return;
@@ -89,7 +76,7 @@ var C = function (_Obj) {
   return C;
 }(_obj2.default);
 
-C.class = 'component';
+C.className = 'component';
 C.singleton = false;
 C.nameReadOnly = false;
 
@@ -192,7 +179,7 @@ var ECS = function (_Obj) {
     key: 'use',
     value: function use(C, name) {
       if (!C) throw _jmErr2.default.err(_jmErr2.default.Err.FA_PARAMS);
-      name || (name = C.class || C.name);
+      name || (name = C.className || C.name);
       if (!name) throw _jmErr2.default.err(_jmErr2.default.Err.FA_PARAMS);
       var components = this._components;
       if (components[name]) {
@@ -272,6 +259,11 @@ var ECS = function (_Obj) {
     key: 'em',
     value: function em(opts) {
       return new _em2.default(this, opts);
+    }
+  }, {
+    key: 'toJSON',
+    value: function toJSON() {
+      return { components: this.components };
     }
   }, {
     key: 'components',
@@ -598,6 +590,14 @@ var EM = function (_Obj) {
       this.emit('update', opts);
     }
   }, {
+    key: 'toJSON',
+    value: function toJSON() {
+      return {
+        ecs: this.ecs,
+        entities: this.entities
+      };
+    }
+  }, {
     key: 'ecs',
     get: function get() {
       return this._ecs;
@@ -644,6 +644,10 @@ Object.defineProperty(exports, "__esModule", {
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
 
 var _jmTag = require('jm-tag');
 
@@ -738,8 +742,8 @@ var E = function (_Obj) {
 
       var components = this._components;
       var componentsByClass = this._componentsByClass;
-      name || (name = C.alias || C.class || C.name);
-      var cClassName = C.alias || C.class;
+      name || (name = c.className);
+      var cClassName = c.className;
 
       var bUsedName = name in components;
       if (bUsedName) {
@@ -756,7 +760,6 @@ var E = function (_Obj) {
       this.addTag(cClassName);
       if (C.alias) this.addTag(C.alias);
 
-      c.onUse(this);
       c.emit('use', this);
       this.emit('use', c);
 
@@ -767,21 +770,22 @@ var E = function (_Obj) {
     value: function unuse(C_or_name) {
       var components = this._components;
       var componentsByClass = this._componentsByClass;
-      var C = C_or_name;
-      if (typeof C === 'string') {
-        C = components[C];
+      var c = C_or_name;
+      var name = void 0;
+      if (typeof c === 'string') {
+        name = c;
+        c = components[c];
       }
-      if (!C) return this;
+      if (!c) return this;
 
-      var name = c.name;
+      name || (name = c.name);
       var cClassName = c.className;
       var v = componentsByClass[cClassName];
       delete components[name];
       delete v[name];
       delete this[name];
-      this.removeTag(cClassName);
+      if (!v.length) this.removeTag(cClassName);
 
-      c.onUnuse(this);
       c.emit('unuse', this);
       this.emit('unuse', c);
       c.destroy();
@@ -791,7 +795,7 @@ var E = function (_Obj) {
     key: 'removeChild',
     value: function removeChild(e) {
       this.em.removeEntity(e.entityId);
-      this.children = _.without(this.children, e);
+      this.children = _lodash2.default.without(this.children, e);
       e.destroy();
     }
   }, {
@@ -851,11 +855,11 @@ var E = function (_Obj) {
       for (var key in target) {
         var t = target[key];
         var o = origin[key];
-        if (_.isObject(t)) {
+        if (_lodash2.default.isObject(t)) {
           if (o) {
             this._clip(o, t);
           }
-          if (_.isEmpty(t)) {
+          if (_lodash2.default.isEmpty(t)) {
             delete target[key];
           }
           continue;
@@ -866,50 +870,48 @@ var E = function (_Obj) {
         }
       }
     }
+  }, {
+    key: 'toJSON',
+    value: function toJSON() {
+      var type = this.type;
 
-    // toJSON() {
-    //     let em = this.em;
-    //     let type = this.type;
-    //     let et = em.entityType(type);
-    //
-    //     let opts = {
-    //         type: type,
-    //         tags: [],
-    //         components: {}
-    //     };
-    //
-    //     opts.tags = _.cloneDeep(this.tags);
-    //     opts.tags = _.without(opts.tags, type);
-    //
-    //     let cs = opts.components;
-    //     let v = this.components;
-    //     for (let i in v) {
-    //         let c = v[i];
-    //         cs[i] = c.toJSON();
-    //         opts.tags = _.without(opts.tags, i, c.className);
-    //         if (c.classAlias) opts.tags = _.without(opts.tags, c.classAlias);
-    //         if (i === cs[i].className)
-    //             delete cs[i].className;
-    //     }
-    //
-    //     for (let i in et.tags) {
-    //         opts.tags = _.without(opts.tags, et.tags[i]);
-    //     }
-    //     if (!opts.tags.length) delete opts.tags;
-    //
-    //     //去掉entityType中已经定义的相同部分
-    //     this._clip(et, opts);
-    //
-    //     v = this.children;
-    //     for (let i in v) {
-    //         let e = v[i];
-    //         if (!opts.children) opts.children = [];
-    //         opts.children.push(e.toJSON());
-    //     }
-    //
-    //     return opts;
-    // }
+      var opts = {
+        type: type,
+        tags: [],
+        components: {}
+      };
 
+      opts.tags = _lodash2.default.cloneDeep(this.tags);
+      opts.tags = _lodash2.default.without(opts.tags, type);
+
+      var cs = opts.components;
+      var v = this.components;
+      for (var i in v) {
+        var c = v[i];
+        cs[i] = c.toJSON();
+        opts.tags = _lodash2.default.without(opts.tags, i, c.className);
+        if (i === cs[i].className) delete cs[i].className;
+      }
+
+      var et = this.em.entityType(type);
+
+      if (et) {
+        for (var _i in et.tags) {
+          opts.tags = _lodash2.default.without(opts.tags, et.tags[_i]);
+        }
+        // 去掉entityType中已经定义的相同部分
+        this._clip(et, opts);
+      }
+      if (opts.tags && !opts.tags.length) delete opts.tags;
+      v = this.children;
+      for (var _i2 in v) {
+        var e = v[_i2];
+        if (!opts.children) opts.children = [];
+        opts.children.push(e.toJSON());
+      }
+
+      return opts;
+    }
   }, {
     key: 'em',
     get: function get() {
@@ -935,11 +937,9 @@ var E = function (_Obj) {
   return E;
 }(_obj2.default);
 
-E._className = 'entity';
-
 exports.default = E;
 module.exports = exports['default'];
-},{"./consts":2,"./obj":8,"jm-err":9,"jm-tag":14}],6:[function(require,module,exports){
+},{"./consts":2,"./obj":8,"jm-err":9,"jm-tag":14,"lodash":16}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1002,6 +1002,7 @@ var F = function (_Obj) {
 
           var info = opts.components[name];
           var C = info.className || name;
+          info.className && delete info.className;
           e.use(C, info, name);
         }
       } catch (err) {
@@ -1026,8 +1027,6 @@ var F = function (_Obj) {
 
   return F;
 }(_obj2.default);
-
-F.class = 'factory';
 
 exports.default = F;
 module.exports = exports['default'];

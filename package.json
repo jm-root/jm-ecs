@@ -1,6 +1,6 @@
 {
   "name": "jm-ecs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Entity Component System lib",
   "main": "./lib/index",
   "scripts": {

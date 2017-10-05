@@ -25,13 +25,12 @@ class F extends Obj {
     for (let name of Object.keys(opts.components)) {
       let info = opts.components[name]
       let C = info.className || name
+      info.className && (delete info.className)
       e.use(C, info, name)
     }
     this.emit('create', e)
     return e
   }
 }
-
-F.class = 'factory'
 
 export default F
