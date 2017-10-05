@@ -7,37 +7,6 @@ import EM from './em'
 let logger = log.getLogger('jm-ecs')
 
 /**
- * using component
- * @param ecs
- * @param C
- * @param name
- * @return {_useC}
- * @private
- */
-function _useC (ecs, C, name) {
-  let components = ecs._components
-  if (components[name]) {
-    logger.warn('use Compoent already exists for ' + name + ', replaced.')
-  }
-  components[name] = C
-  ecs.emit('use', name, C)
-}
-
-function _use (ecs, C, name) {
-  if (!C) throw error.err(error.Err.FA_PARAMS)
-
-  name || (name = C.class || C.name)
-  if (!name) throw error.err(error.Err.FA_PARAMS)
-
-  switch (C.type) {
-    case 'C':
-      return _useC(ecs, C, name)
-      break
-    default:
-  }
-}
-
-/**
  * entity component system
  */
 class ECS extends Obj {
@@ -58,7 +27,15 @@ class ECS extends Obj {
    * @return {ECS}
    */
   use (C, name) {
-    _use(this, C, name)
+    if (!C) throw error.err(error.Err.FA_PARAMS)
+    name || (name = C.class || C.name)
+    if (!name) throw error.err(error.Err.FA_PARAMS)
+    let components = this._components
+    if (components[name]) {
+      logger.warn('use Compoent already exists for ' + name + ', replaced.')
+    }
+    components[name] = C
+    this.emit('use', name, C)
     return this
   }
 
@@ -105,5 +82,7 @@ class ECS extends Obj {
     return new EM(this, opts)
   }
 }
+
+ECS.C = C
 
 export default ECS

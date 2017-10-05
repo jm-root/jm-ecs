@@ -89,7 +89,6 @@ var C = function (_Obj) {
   return C;
 }(_obj2.default);
 
-C.type = 'C';
 C.class = 'component';
 C.singleton = false;
 C.nameReadOnly = false;
@@ -161,37 +160,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var logger = _jmLogger2.default.getLogger('jm-ecs');
 
 /**
- * using component
- * @param ecs
- * @param C
- * @param name
- * @return {_useC}
- * @private
- */
-function _useC(ecs, C, name) {
-  var components = ecs._components;
-  if (components[name]) {
-    logger.warn('use Compoent already exists for ' + name + ', replaced.');
-  }
-  components[name] = C;
-  ecs.emit('use', name, C);
-}
-
-function _use(ecs, C, name) {
-  if (!C) throw _jmErr2.default.err(_jmErr2.default.Err.FA_PARAMS);
-
-  name || (name = C.class || C.name);
-  if (!name) throw _jmErr2.default.err(_jmErr2.default.Err.FA_PARAMS);
-
-  switch (C.type) {
-    case 'C':
-      return _useC(ecs, C, name);
-      break;
-    default:
-  }
-}
-
-/**
  * entity component system
  */
 
@@ -223,7 +191,15 @@ var ECS = function (_Obj) {
   _createClass(ECS, [{
     key: 'use',
     value: function use(C, name) {
-      _use(this, C, name);
+      if (!C) throw _jmErr2.default.err(_jmErr2.default.Err.FA_PARAMS);
+      name || (name = C.class || C.name);
+      if (!name) throw _jmErr2.default.err(_jmErr2.default.Err.FA_PARAMS);
+      var components = this._components;
+      if (components[name]) {
+        logger.warn('use Compoent already exists for ' + name + ', replaced.');
+      }
+      components[name] = C;
+      this.emit('use', name, C);
       return this;
     }
 
@@ -306,6 +282,8 @@ var ECS = function (_Obj) {
 
   return ECS;
 }(_obj2.default);
+
+ECS.C = _component2.default;
 
 exports.default = ECS;
 module.exports = exports['default'];

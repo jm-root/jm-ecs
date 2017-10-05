@@ -53,7 +53,6 @@ class C extends Obj {
   };
 }
 
-C.type = 'C'
 C.class = 'component'
 C.singleton = false
 C.nameReadOnly = false
