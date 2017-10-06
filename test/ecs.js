@@ -8,6 +8,8 @@ import C from '../src/component'
 
 let ecs = new ECS()
   .uses([{class: C, name: 'component2'}])
+  .uses([{class: C, name: 'component1'}])
+  .unuse('component1')
 
 let em = ecs.em()
 

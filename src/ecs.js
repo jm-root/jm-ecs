@@ -64,7 +64,7 @@ class ECS extends Obj {
     let components = this._components
     let C = components[name]
     if (C) {
-      ecs.emit('unuse', name, C)
+      this.emit('unuse', name, C)
     }
     delete components[name]
     return this

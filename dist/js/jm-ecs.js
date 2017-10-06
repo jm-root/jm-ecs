@@ -245,7 +245,7 @@ var ECS = function (_Obj) {
       var components = this._components;
       var C = components[name];
       if (C) {
-        ecs.emit('unuse', name, C);
+        this.emit('unuse', name, C);
       }
       delete components[name];
       return this;
