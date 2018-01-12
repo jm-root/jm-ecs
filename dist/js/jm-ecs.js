@@ -258,7 +258,9 @@ var ECS = function (_Obj) {
   }, {
     key: 'em',
     value: function em(opts) {
-      return new _em2.default(this, opts);
+      var o = new _em2.default(this, opts);
+      this.emit('em', o);
+      return o;
     }
   }, {
     key: 'toJSON',
@@ -275,7 +277,9 @@ var ECS = function (_Obj) {
   return ECS;
 }(_obj2.default);
 
+ECS.EM = _em2.default;
 ECS.C = _component2.default;
+ECS.Obj = _obj2.default;
 
 exports.default = ECS;
 module.exports = exports['default'];
@@ -360,6 +364,7 @@ var EM = function (_Obj) {
       }
 
       this._entityTypes[type] = opts;
+      return this;
     }
   }, {
     key: 'addEntityTypes',
@@ -367,6 +372,7 @@ var EM = function (_Obj) {
       for (var type in opts) {
         this.addEntityType(type, opts[type]);
       }
+      return this;
     }
   }, {
     key: 'entityType',
@@ -428,7 +434,7 @@ var EM = function (_Obj) {
         if (!info) continue;
         var o = null;
         var className = info.className || 'jm.Entity';
-        if (className == 'jm.Entity') {
+        if (className === 'jm.Entity') {
           var type = info.type;
           o = this.createEntity(type, info, e);
         }
@@ -481,6 +487,7 @@ var EM = function (_Obj) {
       pool.forEach(function (e) {
         e.destroy();
       });
+      return this;
     }
   }, {
     key: 'clearPools',
@@ -488,6 +495,7 @@ var EM = function (_Obj) {
       for (var type in this._pools) {
         this.clearPool(type);
       }
+      return this;
     }
   }, {
     key: 'removeEntity',
@@ -528,6 +536,22 @@ var EM = function (_Obj) {
         var _e = v[i];
         this.removeEntity(_e.entityId);
       }
+      return this;
+    }
+  }, {
+    key: 'removeEntities',
+    value: function removeEntities(v) {
+      for (var i in v) {
+        this.removeEntity(v[i]);
+      }
+      return this;
+    }
+  }, {
+    key: 'removeEntitiesByType',
+    value: function removeEntitiesByType(type) {
+      var v = _lodash2.default.filter(this._entities, { type: type });
+      if (v) this.removeEntities(v);
+      return this;
     }
 
     //    getEntities('render')
@@ -542,10 +566,8 @@ var EM = function (_Obj) {
       var v = {};
       // select entities by tags
       if (typeof selector === 'string') {
-        var and = false,
-            // flags for multiple
-        or = false;
-
+        var and = false; // flags for multiple
+        var or = false;
         var rlist = /\s*,\s*/;
         var rspace = /\s+/;
         var del = void 0;
@@ -678,8 +700,7 @@ var Err = _consts2.default.Err;
 var guid = 1;
 
 function isEmptyObject(e) {
-  var t = void 0;
-  for (var _t in e) {
+  for (var t in e) {
     return false;
   }
   return true;
@@ -849,9 +870,6 @@ var E = function (_Obj) {
       if (!origin) {
         return;
       }
-
-      var obj = target;
-
       for (var key in target) {
         var t = target[key];
         var o = origin[key];
@@ -909,7 +927,6 @@ var E = function (_Obj) {
         if (!opts.children) opts.children = [];
         opts.children.push(e.toJSON());
       }
-
       return opts;
     }
   }, {
@@ -1143,7 +1160,7 @@ module.exports = exports['default'];
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _locale = require('./locale');
@@ -1157,95 +1174,95 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  */
 var Err = {
-    SUCCESS: {
-        err: 0,
-        msg: 'Success'
-    },
+  SUCCESS: {
+    err: 0,
+    msg: 'Success'
+  },
 
-    FAIL: {
-        err: 1,
-        msg: 'Fail'
-    },
+  FAIL: {
+    err: 1,
+    msg: 'Fail'
+  },
 
-    FA_SYS: {
-        err: 2,
-        msg: 'System Error'
-    },
+  FA_SYS: {
+    err: 2,
+    msg: 'System Error'
+  },
 
-    FA_NETWORK: {
-        err: 3,
-        msg: 'Network Error'
-    },
+  FA_NETWORK: {
+    err: 3,
+    msg: 'Network Error'
+  },
 
-    FA_PARAMS: {
-        err: 4,
-        msg: 'Parameter Error'
-    },
+  FA_PARAMS: {
+    err: 4,
+    msg: 'Parameter Error'
+  },
 
-    FA_BUSY: {
-        err: 5,
-        msg: 'Busy'
-    },
+  FA_BUSY: {
+    err: 5,
+    msg: 'Busy'
+  },
 
-    FA_TIMEOUT: {
-        err: 6,
-        msg: 'Time Out'
-    },
+  FA_TIMEOUT: {
+    err: 6,
+    msg: 'Time Out'
+  },
 
-    FA_ABORT: {
-        err: 7,
-        msg: 'Abort'
-    },
+  FA_ABORT: {
+    err: 7,
+    msg: 'Abort'
+  },
 
-    FA_NOTREADY: {
-        err: 8,
-        msg: 'Not Ready'
-    },
+  FA_NOTREADY: {
+    err: 8,
+    msg: 'Not Ready'
+  },
 
-    FA_NOTEXISTS: {
-        err: 9,
-        msg: 'Not Exists'
-    },
+  FA_NOTEXISTS: {
+    err: 9,
+    msg: 'Not Exists'
+  },
 
-    FA_EXISTS: {
-        err: 8,
-        msg: 'Already Exists'
-    },
+  FA_EXISTS: {
+    err: 8,
+    msg: 'Already Exists'
+  },
 
-    OK: {
-        err: 200,
-        msg: 'OK'
-    },
+  OK: {
+    err: 200,
+    msg: 'OK'
+  },
 
-    FA_BADREQUEST: {
-        err: 400,
-        msg: 'Bad Request'
-    },
+  FA_BADREQUEST: {
+    err: 400,
+    msg: 'Bad Request'
+  },
 
-    FA_NOAUTH: {
-        err: 401,
-        msg: 'Unauthorized'
-    },
+  FA_NOAUTH: {
+    err: 401,
+    msg: 'Unauthorized'
+  },
 
-    FA_NOPERMISSION: {
-        err: 403,
-        msg: 'Forbidden'
-    },
+  FA_NOPERMISSION: {
+    err: 403,
+    msg: 'Forbidden'
+  },
 
-    FA_NOTFOUND: {
-        err: 404,
-        msg: 'Not Found'
-    },
+  FA_NOTFOUND: {
+    err: 404,
+    msg: 'Not Found'
+  },
 
-    FA_INTERNALERROR: {
-        err: 500,
-        msg: 'Internal Server Error'
-    },
+  FA_INTERNALERROR: {
+    err: 500,
+    msg: 'Internal Server Error'
+  },
 
-    FA_UNAVAILABLE: {
-        err: 503,
-        msg: 'Service Unavailable'
-    }
+  FA_UNAVAILABLE: {
+    err: 503,
+    msg: 'Service Unavailable'
+  }
 }; /**
     * err module.
     * @module err
@@ -1266,33 +1283,12 @@ Err.t = _locale2.default;
  * @return {String} final message
  */
 var errMsg = function errMsg(msg, opts) {
-    if (opts) {
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-            for (var _iterator = Object.keys(opts)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var key = _step.value;
-
-                msg = msg.split('${' + key + '}').join(opts[key]);
-            }
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
-            }
-        }
+  if (opts) {
+    for (var key in opts) {
+      msg = msg.split('${' + key + '}').join(opts[key]);
     }
-    return msg;
+  }
+  return msg;
 };
 
 /**
@@ -1302,15 +1298,15 @@ var errMsg = function errMsg(msg, opts) {
  * @return {Error}
  */
 var err = function err(E, opts) {
-    if (typeof E === 'string') {
-        E = {
-            msg: E
-        };
-    }
-    var msg = errMsg(E.msg, opts);
-    var e = new Error(msg);
-    E.err && (e.code = E.err);
-    return e;
+  if (typeof E === 'string') {
+    E = {
+      msg: E
+    };
+  }
+  var msg = errMsg(E.msg, opts);
+  var e = new Error(msg);
+  E.err && (e.code = E.err);
+  return e;
 };
 
 /**
@@ -1320,13 +1316,13 @@ var err = function err(E, opts) {
  * @return {boolean}
  */
 var enableErr = function enableErr(obj) {
-    var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Err';
+  var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Err';
 
-    if (obj[name]) return false;
-    obj[name] = Err;
-    obj.err = err;
-    obj.errMsg = errMsg;
-    return true;
+  if (obj[name]) return false;
+  obj[name] = Err;
+  obj.err = err;
+  obj.errMsg = errMsg;
+  return true;
 };
 
 /**
@@ -1335,31 +1331,31 @@ var enableErr = function enableErr(obj) {
  * @param {String} [name] name to bind
  */
 var disableErr = function disableErr(obj) {
-    var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Err';
+  var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Err';
 
-    if (!obj[name]) return;
-    delete obj[name];
-    delete obj.err;
-    delete obj.errMsg;
+  if (!obj[name]) return;
+  delete obj[name];
+  delete obj.err;
+  delete obj.errMsg;
 };
 
 var $ = {
-    Err: Err,
-    errMsg: errMsg,
-    err: err,
-    enableErr: enableErr,
-    disableErr: disableErr
+  Err: Err,
+  errMsg: errMsg,
+  err: err,
+  enableErr: enableErr,
+  disableErr: disableErr
 };
 
 if (typeof global !== 'undefined' && global) {
-    global.jm || (global.jm = {});
-    var jm = global.jm;
-    if (!jm.enableErr) {
-        enableErr(jm);
-        for (var key in $) {
-            jm[key] = $[key];
-        }
+  global.jm || (global.jm = {});
+  var jm = global.jm;
+  if (!jm.enableErr) {
+    enableErr(jm);
+    for (var key in $) {
+      jm[key] = $[key];
     }
+  }
 }
 
 exports.default = $;
@@ -1369,12 +1365,12 @@ module.exports = exports['default'];
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 exports.default = function (msg, lng) {
-    if (!lng || !lngs[lng]) return null;
-    return lngs[lng][msg];
+  if (!lng || !lngs[lng]) return null;
+  return lngs[lng][msg];
 };
 
 var _zh_CN = require('./zh_CN');
@@ -1384,42 +1380,41 @@ var _zh_CN2 = _interopRequireDefault(_zh_CN);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var lngs = {
-    zh_CN: _zh_CN2.default
-};
+  zh_CN: _zh_CN2.default
 
-/**
- * translate
- * @param {string} msg - msg to be translate
- * @param {string} lng - language
- * @return {String | null}
- */
-;
+  /**
+   * translate
+   * @param {string} msg - msg to be translate
+   * @param {string} lng - language
+   * @return {String | null}
+   */
+};;
 module.exports = exports['default'];
 },{"./zh_CN":11}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.default = {
-    'Success': '成功',
-    'Fail': '失败',
-    'System Error': '系统错误',
-    'Network Error': '网络错误',
-    'Parameter Error': '参数错误',
-    'Busy': '忙',
-    'Time Out': '超时',
-    'Abort': '中止',
-    'Not Ready': '未准备好',
-    'Not Exists': '不存在',
-    'Already Exists': '已存在',
-    'OK': 'OK',
-    'Bad Request': '错误请求',
-    'Unauthorized': '未验证',
-    'Forbidden': '无权限',
-    'Not Found': '未找到',
-    'Internal Server Error': '服务器内部错误',
-    'Service Unavailable': '无效服务'
+  'Success': '成功',
+  'Fail': '失败',
+  'System Error': '系统错误',
+  'Network Error': '网络错误',
+  'Parameter Error': '参数错误',
+  'Busy': '忙',
+  'Time Out': '超时',
+  'Abort': '中止',
+  'Not Ready': '未准备好',
+  'Not Exists': '不存在',
+  'Already Exists': '已存在',
+  'OK': 'OK',
+  'Bad Request': '错误请求',
+  'Unauthorized': '未验证',
+  'Forbidden': '无权限',
+  'Not Found': '未找到',
+  'Internal Server Error': '服务器内部错误',
+  'Service Unavailable': '无效服务'
 };
 module.exports = exports['default'];
 },{}],12:[function(require,module,exports){
@@ -1427,7 +1422,7 @@ module.exports = exports['default'];
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -1462,17 +1457,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * ```
  */
 var EventEmitter = function () {
-
-    /**
+  /**
      * Create an eventEmitter.
      */
-    function EventEmitter() {
-        _classCallCheck(this, EventEmitter);
+  function EventEmitter() {
+    _classCallCheck(this, EventEmitter);
 
-        this._events = {};
-    }
+    this._events = {};
+  }
 
-    /**
+  /**
      * Adds the listener function to the end of the listeners array for the event named eventName.
      * No checks are made to see if the listener has already been added.
      * Multiple calls passing the same combination of eventName and listener will result in the listener being added, and called, multiple times.
@@ -1484,254 +1478,211 @@ var EventEmitter = function () {
      */
 
 
-    _createClass(EventEmitter, [{
-        key: 'on',
-        value: function on(eventName, fn, prepend) {
-            this._events[eventName] || (this._events[eventName] = []);
-            if (prepend) {
-                this._events[eventName].unshift(fn);
-            } else {
-                this._events[eventName].push(fn);
+  _createClass(EventEmitter, [{
+    key: 'on',
+    value: function on(eventName, fn, prepend) {
+      this._events[eventName] || (this._events[eventName] = []);
+      if (prepend) {
+        this._events[eventName].unshift(fn);
+      } else {
+        this._events[eventName].push(fn);
+      }
+      return this;
+    }
+
+    /**
+       * Adds a one time listener function for the event named eventName.
+       * The next time eventName is triggered, this listener is removed and then invoked.
+       *
+       * @param {*} eventName - event name
+       * @param {Function} fn - listener function
+       * @param {boolean} [prepend] - Adds to the beginning of the listeners array if true
+       * @return {EventEmitter} - for chaining
+       */
+
+  }, {
+    key: 'once',
+    value: function once(eventName, fn, prepend) {
+      var _this = this;
+
+      var on = function on(arg1, arg2, arg3, arg4, arg5) {
+        _this.off(eventName, on);
+        fn(arg1, arg2, arg3, arg4, arg5);
+      };
+      return this.on(eventName, on, prepend);
+    }
+
+    /**
+       * Removes a listener for the event named eventName.
+       * Removes all listeners from the listener array for event named eventName if fn is null
+       * Removes all listeners from the listener array if eventName is null
+       *
+       * @param {*} [eventName] - event name
+       * @param {Function} [fn] - listener function
+       * @return {EventEmitter} - for chaining
+       */
+
+  }, {
+    key: 'off',
+    value: function off(eventName, fn) {
+      if (!fn) {
+        if (eventName === undefined) {
+          this._events = {};
+        } else if (this._events && this._events[eventName]) {
+          delete this._events[eventName];
+        }
+      } else if (this._events && this._events[eventName]) {
+        var list = this._events[eventName];
+        for (var i = 0; i < list.length; i++) {
+          if (fn === list[i]) {
+            list.splice(i, 1);
+            if (!list.length) {
+              delete this._events[eventName];
             }
-            return this;
+            break;
+          }
         }
+      }
+      return this;
+    }
 
-        /**
-         * Adds a one time listener function for the event named eventName.
-         * The next time eventName is triggered, this listener is removed and then invoked.
-         *
-         * @param {*} eventName - event name
-         * @param {Function} fn - listener function
-         * @param {boolean} [prepend] - Adds to the beginning of the listeners array if true
-         * @return {EventEmitter} - for chaining
-         */
+    /**
+       * Synchronously calls each of the listeners registered for the event named eventName,
+       * in the order they were registered, passing the supplied arguments to each.
+       *
+       * to break the calls, just return false on listener function.
+       * ```javascript
+       * // es6
+       * let eventEmitter = new EventEmitter();
+       * eventEmitter.on('test', (info) => {
+       *      // this will be called
+       *      console.log(info);
+       * });
+       * eventEmitter.on('test', (info) => {
+       *      // this will be called
+       *      return false;  // this break the calls
+       * });
+       * eventEmitter.on('test', (info) => {
+       *      // this will not be called.
+       *      console.log(info);
+       * });
+       * eventEmitter.emit('test', 'hello eventEmitter');
+       * ```
+       * tip: use arg1...arg5 instead of arguments for performance consider.
+       *
+       * @param {*} eventName - event name
+       * @param {*} arg1
+       * @param {*} arg2
+       * @param {*} arg3
+       * @param {*} arg4
+       * @param {*} arg5
+       * @return {EventEmitter} - for chaining
+       */
 
-    }, {
-        key: 'once',
-        value: function once(eventName, fn, prepend) {
-            var _this = this;
+  }, {
+    key: 'emit',
+    value: function emit(eventName, arg1, arg2, arg3, arg4, arg5) {
+      // using a copy to avoid error when listener array changed
+      var listeners = this.listeners(eventName);
+      for (var i = 0; i < listeners.length; i++) {
+        var fn = listeners[i];
+        if (fn(arg1, arg2, arg3, arg4, arg5) === false) break;
+      }
+      return this;
+    }
 
-            var on = function on(arg1, arg2, arg3, arg4, arg5) {
-                _this.off(eventName, on);
-                fn(arg1, arg2, arg3, arg4, arg5);
-            };
-            return this.on(eventName, on, prepend);
-        }
+    /**
+       * Returns an array listing the events for which the emitter has registered listeners.
+       * The values in the array will be strings or Symbols.
+       * @return {Array}
+       */
 
-        /**
-         * Removes a listener for the event named eventName.
-         * Removes all listeners from the listener array for event named eventName if fn is null
-         * Removes all listeners from the listener array if eventName is null
-         *
-         * @param {*} [eventName] - event name
-         * @param {Function} [fn] - listener function
-         * @return {EventEmitter} - for chaining
-         */
+  }, {
+    key: 'eventNames',
+    value: function eventNames() {
+      return Object.keys(this._events);
+    }
 
-    }, {
-        key: 'off',
-        value: function off(eventName, fn) {
-            if (!fn) {
-                if (eventName === undefined) {
-                    this._events = {};
-                } else if (this._events && this._events[eventName]) {
-                    delete this._events[eventName];
-                }
-            } else if (this._events && this._events[eventName]) {
-                var list = this._events[eventName];
-                for (var i = 0; i < list.length; i++) {
-                    if (fn === list[i]) {
-                        list.splice(i, 1);
-                        if (!list.length) {
-                            delete this._events[eventName];
-                        }
-                        break;
-                    }
-                }
-            }
-            return this;
-        }
+    /**
+       * Returns a copy of the array of listeners for the event named eventName.
+       * @param {*} eventName - event name
+       * @return {Array} - listener array
+       */
 
-        /**
-         * Synchronously calls each of the listeners registered for the event named eventName,
-         * in the order they were registered, passing the supplied arguments to each.
-         *
-         * to break the calls, just return false on listener function.
-         * ```javascript
-         * // es6
-         * let eventEmitter = new EventEmitter();
-         * eventEmitter.on('test', (info) => {
-         *      // this will be called
-         *      console.log(info);
-         * });
-         * eventEmitter.on('test', (info) => {
-         *      // this will be called
-         *      return false;  // this break the calls
-         * });
-         * eventEmitter.on('test', (info) => {
-         *      // this will not be called.
-         *      console.log(info);
-         * });
-         * eventEmitter.emit('test', 'hello eventEmitter');
-         * ```
-         * tip: use arg1...arg5 instead of arguments for performance consider.
-         *
-         * @param {*} eventName - event name
-         * @param {*} arg1
-         * @param {*} arg2
-         * @param {*} arg3
-         * @param {*} arg4
-         * @param {*} arg5
-         * @return {EventEmitter} - for chaining
-         */
+  }, {
+    key: 'listeners',
+    value: function listeners(eventName) {
+      var v = this._events[eventName];
+      if (!v) return [];
+      var listeners = new Array(v.length);
+      for (var i = 0; i < v.length; i++) {
+        listeners[i] = v[i];
+      }
+      return listeners;
+    }
+  }]);
 
-    }, {
-        key: 'emit',
-        value: function emit(eventName, arg1, arg2, arg3, arg4, arg5) {
-            // using a copy to avoid error when listener array changed
-            var listeners = this.listeners(eventName);
-            for (var i = 0; i < listeners.length; i++) {
-                var fn = listeners[i];
-                if (fn(arg1, arg2, arg3, arg4, arg5) === false) break;
-            }
-            return this;
-        }
-
-        /**
-         * Returns an array listing the events for which the emitter has registered listeners.
-         * The values in the array will be strings or Symbols.
-         * @return {Array}
-         */
-
-    }, {
-        key: 'eventNames',
-        value: function eventNames() {
-            return Object.keys(this._events);
-        }
-
-        /**
-         * Returns a copy of the array of listeners for the event named eventName.
-         * @param {*} eventName - event name
-         * @return {Array} - listener array
-         */
-
-    }, {
-        key: 'listeners',
-        value: function listeners(eventName) {
-            var v = this._events[eventName];
-            if (!v) return [];
-            var listeners = new Array(v.length);
-            for (var i = 0; i < v.length; i++) {
-                listeners[i] = v[i];
-            }
-            return listeners;
-        }
-    }]);
-
-    return EventEmitter;
+  return EventEmitter;
 }();
 
 var prototype = EventEmitter.prototype;
 var EM = {
-    _events: {},
-    on: prototype.on,
-    once: prototype.once,
-    off: prototype.off,
-    emit: prototype.emit,
-    eventNames: prototype.eventNames,
-    listeners: prototype.listeners
+  _events: {},
+  on: prototype.on,
+  once: prototype.once,
+  off: prototype.off,
+  emit: prototype.emit,
+  eventNames: prototype.eventNames,
+  listeners: prototype.listeners
 };
 
 var enableEvent = function enableEvent(obj) {
-    if (obj.emit !== undefined) return false;
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-        for (var _iterator = Object.keys(EM)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var key = _step.value;
-
-            obj[key] = EM[key];
-        }
-    } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-            }
-        } finally {
-            if (_didIteratorError) {
-                throw _iteratorError;
-            }
-        }
-    }
-
-    obj._events = {};
-    return true;
+  if (obj.emit !== undefined) return false;
+  for (var key in EM) {
+    obj[key] = EM[key];
+  }
+  obj._events = {};
+  return true;
 };
 
 var disableEvent = function disableEvent(obj) {
-    if (obj.emit === undefined) return;
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
-
-    try {
-        for (var _iterator2 = Object.keys(EM)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var key = _step2.value;
-
-            delete obj[key];
-        }
-    } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
-            }
-        } finally {
-            if (_didIteratorError2) {
-                throw _iteratorError2;
-            }
-        }
-    }
+  if (obj.emit === undefined) return;
+  for (var key in EM) {
+    delete obj[key];
+  }
 };
 
 var moduleEvent = function moduleEvent() {
-    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'event';
+  var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'event';
 
-    var obj = this;
-    obj.enableEvent = enableEvent;
-    obj.disableEvent = disableEvent;
+  var obj = this;
+  obj.enableEvent = enableEvent;
+  obj.disableEvent = disableEvent;
 
-    return {
-        name: name,
-        unuse: function unuse() {
-            delete obj.enableEvent;
-            delete obj.disableEvent;
-        }
-    };
+  return {
+    name: name,
+    unuse: function unuse() {
+      delete obj.enableEvent;
+      delete obj.disableEvent;
+    }
+  };
 };
 
 var $ = {
-    EventEmitter: EventEmitter,
-    enableEvent: enableEvent,
-    disableEvent: disableEvent,
-    moduleEvent: moduleEvent
+  EventEmitter: EventEmitter,
+  enableEvent: enableEvent,
+  disableEvent: disableEvent,
+  moduleEvent: moduleEvent
 };
 
 if (typeof global !== 'undefined' && global) {
-    global.jm || (global.jm = {});
-    var jm = global.jm;
-    if (!jm.EventEmitter) {
-        for (var key in $) {
-            jm[key] = $[key];
-        }
+  global.jm || (global.jm = {});
+  var jm = global.jm;
+  if (!jm.EventEmitter) {
+    for (var key in $) {
+      jm[key] = $[key];
     }
+  }
 }
 
 exports.default = $;

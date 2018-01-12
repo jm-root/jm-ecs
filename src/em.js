@@ -60,12 +60,14 @@ class EM extends Obj {
     }
 
     this._entityTypes[type] = opts
+    return this
   }
 
   addEntityTypes (opts) {
     for (let type in opts) {
       this.addEntityType(type, opts[type])
     }
+    return this
   }
 
   entityType (type) {
@@ -123,7 +125,7 @@ class EM extends Obj {
       if (!info) continue
       let o = null
       let className = info.className || 'jm.Entity'
-      if (className == 'jm.Entity') {
+      if (className === 'jm.Entity') {
         let type = info.type
         o = this.createEntity(type, info, e)
       }
@@ -173,12 +175,14 @@ class EM extends Obj {
     pool.forEach(function (e) {
       e.destroy()
     })
+    return this
   }
 
   clearPools () {
     for (let type in this._pools) {
       this.clearPool(type)
     }
+    return this
   }
 
   removeEntity (entityId) {
@@ -217,6 +221,20 @@ class EM extends Obj {
       let _e = v[i]
       this.removeEntity(_e.entityId)
     }
+    return this
+  }
+
+  removeEntities (v) {
+    for (let i in v) {
+      this.removeEntity(v[i])
+    }
+    return this
+  }
+
+  removeEntitiesByType (type) {
+    let v = _.filter(this._entities, {type})
+    if (v) this.removeEntities(v)
+    return this
   }
 
   //    getEntities('render')
@@ -228,9 +246,8 @@ class EM extends Obj {
     let v = {}
     // select entities by tags
     if (typeof selector === 'string') {
-      let and = false, // flags for multiple
-        or = false
-
+      let and = false // flags for multiple
+      let or = false
       let rlist = /\s*,\s*/
       let rspace = /\s+/
       let del

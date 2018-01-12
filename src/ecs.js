@@ -79,7 +79,9 @@ class ECS extends Obj {
   }
 
   em (opts) {
-    return new EM(this, opts)
+    let o = new EM(this, opts)
+    this.emit('em', o)
+    return o
   }
 
   toJSON () {
@@ -87,6 +89,8 @@ class ECS extends Obj {
   }
 }
 
+ECS.EM = EM
 ECS.C = C
+ECS.Obj = Obj
 
 export default ECS

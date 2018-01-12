@@ -39,6 +39,8 @@ logger.info('ecs: %j', ecs)
 logger.info('em: %j', em)
 logger.info('e: %j', e)
 logger.info('e2: %j', e2)
+em.removeEntitiesByType('test')
+logger.info('em: %j', em)
 
 describe('ecs', function () {
   it('ecs', function () {
@@ -46,7 +48,9 @@ describe('ecs', function () {
     expect(ecs).to.be.an('object')
   })
 
-  it('em', function () {
-    expect(em).to.be.an('object')
+  it('em', function (done) {
+
+
+    done()
   })
 })
