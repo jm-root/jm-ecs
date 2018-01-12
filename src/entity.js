@@ -9,7 +9,6 @@ let Err = consts.Err
 let guid = 1
 
 function isEmptyObject (e) {
-  let t
   for (let t in e) {
     return false
   }
@@ -121,7 +120,7 @@ class E extends Obj {
     delete components[name]
     delete v[name]
     delete this[name]
-    if(!v.length) this.removeTag(cClassName)
+    if (!v.length) this.removeTag(cClassName)
 
     c.emit('unuse', this)
     this.emit('unuse', c)
@@ -177,9 +176,6 @@ class E extends Obj {
     if (!origin) {
       return
     }
-
-    let obj = target
-
     for (let key in target) {
       let t = target[key]
       let o = origin[key]
@@ -208,37 +204,35 @@ class E extends Obj {
       components: {}
     }
 
-    opts.tags = _.cloneDeep(this.tags);
-    opts.tags = _.without(opts.tags, type);
+    opts.tags = _.cloneDeep(this.tags)
+    opts.tags = _.without(opts.tags, type)
 
-    let cs = opts.components;
-    let v = this.components;
+    let cs = opts.components
+    let v = this.components
     for (let i in v) {
-      let c = v[i];
-      cs[i] = c.toJSON();
-      opts.tags = _.without(opts.tags, i, c.className);
-      if (i === cs[i].className)
-        delete cs[i].className
+      let c = v[i]
+      cs[i] = c.toJSON()
+      opts.tags = _.without(opts.tags, i, c.className)
+      if (i === cs[i].className) delete cs[i].className
     }
 
     let et = this.em.entityType(type)
 
     if (et) {
       for (let i in et.tags) {
-        opts.tags = _.without(opts.tags, et.tags[i]);
+        opts.tags = _.without(opts.tags, et.tags[i])
       }
       // 去掉entityType中已经定义的相同部分
-      this._clip(et, opts);
+      this._clip(et, opts)
     }
-    if (opts.tags && !opts.tags.length) delete opts.tags;
-    v = this.children;
+    if (opts.tags && !opts.tags.length) delete opts.tags
+    v = this.children
     for (let i in v) {
-      let e = v[i];
-      if (!opts.children) opts.children = [];
-      opts.children.push(e.toJSON());
+      let e = v[i]
+      if (!opts.children) opts.children = []
+      opts.children.push(e.toJSON())
     }
-
-    return opts;
+    return opts
   }
 }
 

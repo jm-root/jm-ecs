@@ -7,7 +7,6 @@ let opts = {
   abc: 123
 }
 let o = new C(e, opts)
-console.log('%j', C)
 console.log('%j', o)
 
 describe('C', function () {
