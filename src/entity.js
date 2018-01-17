@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import {utils} from 'jm-utils'
 import tag from 'jm-tag'
 import error from 'jm-err'
 import Obj from './obj'
@@ -13,6 +13,13 @@ function isEmptyObject (e) {
     return false
   }
   return true
+}
+
+function without (v, o) {
+  if (!v) return
+  let idx = v.indexOf(o)
+  if (idx === -1) return
+  v.splice(idx, 1)
 }
 
 class E extends Obj {
@@ -130,7 +137,7 @@ class E extends Obj {
 
   removeChild (e) {
     this.em.removeEntity(e.entityId)
-    this.children = _.without(this.children, e)
+    this.children = without(this.children, e)
     e.destroy()
   }
 
@@ -179,11 +186,11 @@ class E extends Obj {
     for (let key in target) {
       let t = target[key]
       let o = origin[key]
-      if (_.isObject(t)) {
+      if (typeof t === 'object') {
         if (o) {
           this._clip(o, t)
         }
-        if (_.isEmpty(t)) {
+        if (isEmptyObject(t)) {
           delete target[key]
         }
         continue
@@ -204,15 +211,16 @@ class E extends Obj {
       components: {}
     }
 
-    opts.tags = _.cloneDeep(this.tags)
-    opts.tags = _.without(opts.tags, type)
+    opts.tags = utils.cloneDeep(this.tags)
+    opts.tags = without(opts.tags, type)
 
     let cs = opts.components
     let v = this.components
     for (let i in v) {
       let c = v[i]
       cs[i] = c.toJSON()
-      opts.tags = _.without(opts.tags, i, c.className)
+      opts.tags = without(opts.tags, i)
+      opts.tags = without(opts.tags, c.className)
       if (i === cs[i].className) delete cs[i].className
     }
 
@@ -220,7 +228,7 @@ class E extends Obj {
 
     if (et) {
       for (let i in et.tags) {
-        opts.tags = _.without(opts.tags, et.tags[i])
+        opts.tags = without(opts.tags, et.tags[i])
       }
       // 去掉entityType中已经定义的相同部分
       this._clip(et, opts)

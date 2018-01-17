@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import {utils} from 'jm-utils'
 import Obj from './obj'
 import E from './entity'
 import F from './factory'
@@ -97,9 +97,9 @@ class EM extends Obj {
 
     let _opts = opts
     opts = {}
-    opts = _.cloneDeep(this._entityTypes[type])
+    opts = utils.cloneDeep(this._entityTypes[type])
     if (_opts) {
-      opts = _.merge(opts, _.cloneDeep(_opts))
+      opts = utils.merge(opts, utils.cloneDeep(_opts))
     }
 
     if (parent) opts.parent = parent
@@ -187,7 +187,7 @@ class EM extends Obj {
 
   removeEntity (entityId) {
     let e
-    if (_.isObject(entityId)) {
+    if (typeof entityId === 'object') {
       e = entityId
     } else {
       e = this._entities[entityId]
@@ -232,8 +232,12 @@ class EM extends Obj {
   }
 
   removeEntitiesByType (type) {
-    let v = _.filter(this._entities, {type})
-    if (v) this.removeEntities(v)
+    let v = []
+    for (let i in this._entities) {
+      let e = this._entities[i]
+      if (e.type === type) v.push(e)
+    }
+    this.removeEntities(v)
     return this
   }
 

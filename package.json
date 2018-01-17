@@ -1,6 +1,6 @@
 {
   "name": "jm-ecs",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Entity Component System lib",
   "main": "./lib/index",
   "scripts": {
@@ -26,7 +26,8 @@
     "jm-err": "^1.0.1",
     "jm-event": "^1.0.1",
     "jm-logger": "^1.0.1",
-    "jm-tag": "^0.0.2"
+    "jm-tag": "^0.0.2",
+    "jm-utils": "^1.0.2"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -51,7 +52,6 @@
     "gulp-sequence": "^0.4.6",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
-    "jm-utils": "^1.0.1",
     "jshint": "^2.9.4",
     "mocha": "^3.4.2"
   }
