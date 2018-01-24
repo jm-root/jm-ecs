@@ -1,6 +1,6 @@
 {
   "name": "jm-ecs",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Entity Component System lib",
   "main": "./lib/index",
   "scripts": {
@@ -27,7 +27,7 @@
     "jm-event": "^1.0.1",
     "jm-logger": "^1.0.1",
     "jm-tag": "^0.0.2",
-    "jm-utils": "^1.0.2"
+    "jm-utils": "^1.0.3"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
